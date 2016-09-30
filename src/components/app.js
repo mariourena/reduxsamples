@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import Search from '../containers/search';
-import List from '../containers/list'
+import BookList from '../containers/book-list';
+import BookDetail from '../containers/book-detail';
 
 export default class App extends Component {
   render() {
+
     return (
-    	<main role="main">
-    		<Search />
-    		<List />
-    	</main>
+		<div>
+			<BookList />
+			<BookDetail />
+		</div>
     );
   }
 }
