@@ -1,7 +1,20 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { Link } from 'react-router';
 import { posts } from '../actions/index';
+
+const FIELDS = {
+	title: {
+		label: 'Title for Post'
+	}
+	, categories: {
+		label: 'Enter some categories for this post'
+	}
+	, content: {
+		label: 'Post Content'
+	}
+}
 
 class PostsNew extends Component {
 
@@ -25,24 +38,24 @@ class PostsNew extends Component {
 			})
 	}
 
-	renderField(label, prop, field) {
+	renderField(config, prop, field) {
 		return(
 			<div className={`form-group ${prop.touched && prop.invalid ? 'has-danger' : ':'}`}>
-				<label>{label}</label>
+				<label>{config.label}</label>
 				{field}
 				<div className="text-help">{prop.touched && prop.error}</div>
 			</div>
 		);
 	}
 
-	renderText(label, prop) {
-		return this.renderField(label, prop, (
+	renderText(config, prop) {
+		return this.renderField(config, prop, (
 			<input type="text" className="form-control" {...prop} />
 		))
 	}
 
-	renderTextArea(label, prop) {
-		return this.renderField(label, prop, (
+	renderTextArea(config, prop) {
+		return this.renderField(config, prop, (
 			<textarea className="form-control" {...prop} />
 		))
 	}
@@ -53,9 +66,9 @@ class PostsNew extends Component {
 		return(
 			<form onSubmit={handleSubmit(this.onSubmit)}>
 				<h3>Create a New Post</h3>
-				{this.renderText('Title', title)}
-				{this.renderText('Categories', categories)}
-				{this.renderTextArea('Content', content)}
+				{this.renderText(FIELDS.title, title)}
+				{this.renderText(FIELDS.categories, categories)}
+				{this.renderTextArea(FIELDS.content, content)}
 				<button type="submit" className="btn btn-primary">Submit</button>
 				<Link to="/" className="btn btn-danger">Cancel</Link>
 			</form>
@@ -63,26 +76,24 @@ class PostsNew extends Component {
 	}
 }
 
-function validate(values) {
-	const errors = {};
-	function required (field) {
-		if(!values[field]) errors[field] = 'Please enter a value for ' + field
-	}
-
-	required('title');
-	required('categories');
-	required('content');
-
-	return errors;
-}
-
 // connect: 1st arg is mapStateToProps, 2nd mapDispatchToProps
 // reduxForm: 1st arg is config, 2nd mapStateToProps, 3rd mapDispatchToProps
 
 export default reduxForm({
 	form: 'PostsNew'
-	, fields: ['title', 'categories', 'content']
+	, fields: _.keys(FIELDS)
 	, validate
 }, null, { createPost: posts.create })(PostsNew);
+
+function validate(values) {
+	const errors = {};
+	
+	_.each(FIELDS, (type, field) => {
+		// Required 
+		if(!values[field]) errors[field] = 'Please enter a value for ' + field
+	})
+
+	return errors;
+}
 
 
