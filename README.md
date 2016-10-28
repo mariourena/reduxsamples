@@ -1,4 +1,20 @@
-# ReduxSimpleStarter
+# Sample redux projects
+
+Sample projects completed by Mario Urena. 
+
+###Getting Started###
+
+You can review the sample project in this repo git@github.com:mariourena/reduxsamples.git
+
+```
+	> git clone git@github.com:mariourena/reduxsamples.git
+	> cd reduxsamples
+	> git checkout [blog|youtube|weather|books]
+	> npm install
+	> npm start
+```
+
+# Credit to boilerplate and tutorial
 
 Interested in learning [Redux](https://www.udemy.com/react-redux/)?
 
