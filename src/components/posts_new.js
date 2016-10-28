@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import { createPost } from '../actions/index';
+import { Link } from 'react-router';
+import { posts } from '../actions/index';
 
 class PostsNew extends Component {
 
@@ -9,6 +10,19 @@ class PostsNew extends Component {
 		this.renderField = this.renderField.bind(this);
 		this.renderText = this.renderText.bind(this);
 		this.renderTextArea = this.renderTextArea.bind(this);
+		this.onSubmit = this.onSubmit.bind(this);
+	}
+
+	static contextTypes = {
+		router: PropTypes.object
+	}
+
+	onSubmit(props) {
+		this.props.createPost(props)
+			.then(() => {
+				// Blog post has been created
+				this.context.router.push('/')
+			})
 	}
 
 	renderField(label, prop, field) {
@@ -37,12 +51,13 @@ class PostsNew extends Component {
 		const { handleSubmit, fields: { title, categories, content } } = this.props;
 
 		return(
-			<form onSubmit={handleSubmit(this.props.createPost)}>
+			<form onSubmit={handleSubmit(this.onSubmit)}>
 				<h3>Create a New Post</h3>
 				{this.renderText('Title', title)}
 				{this.renderText('Categories', categories)}
 				{this.renderTextArea('Content', content)}
 				<button type="submit" className="btn btn-primary">Submit</button>
+				<Link to="/" className="btn btn-danger">Cancel</Link>
 			</form>
 		);
 	}
@@ -68,6 +83,6 @@ export default reduxForm({
 	form: 'PostsNew'
 	, fields: ['title', 'categories', 'content']
 	, validate
-}, null, { createPost })(PostsNew);
+}, null, { createPost: posts.create })(PostsNew);
 
 
